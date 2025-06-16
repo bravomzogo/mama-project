@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DASAUDA | Register{% endblock %}
+{% block body_class %}register{% endblock %}
+
+{% block extra_head %}
+<style>
+    #register {
+        transition: all 0.5s ease;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-container {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control input[type="text"],
+    .form-control input[type="email"],
+    .form-control input[type="password"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control label {
+        position: absolute;
+        top: 12px;
+        left: 15px;
+        color: #666;
+        font-size: 1rem;
+        transition: all 0.3s ease; 
+        pointer-events: none;
+        padding-left: 10px;
+        padding-top: 8px;
+    }
+
+    .form-control input[type="text"]:focus,
+    .form-control input[type="email"]:focus,
+    .form-control input[type="password"]:focus,
+    .form-control input[type="text"]:not(:placeholder-shown),
+    .form-control input[type="email"]:not(:placeholder-shown),
+    .form-control input[type="password"]:not(:placeholder-shown) {
+        border-color: #6221f8;
+        outline: none;
+    }
+
+    .form-control input[type="text"]:focus + label,
+    .form-control input[type="email"]:focus + label,
+    .form-control input[type="password"]:focus + label,
+    .form-control input[type="text"]:not(:placeholder-shown) + label,
+    .form-control input[type="email"]:not(:placeholder-shown) + label,
+    .form-control input[type="password"]:not(:placeholder-shown) + label {
+        top: -8px;
+        left: 10px;
+        font-size: 0.8rem;
+        color: #f8d521;
+        background: white;
+        padding: 0 5px;
+    }
+
+    .btn-dark {
+        background: #2c2c2c;
+        color: white;
+        border: none;
+        border-left: 4px solid #f8d521;
+        text-transform: uppercase;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-dark:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        background: #3a3a3a;
+    }
+
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        background: #fff5f5;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .form-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c2c2c;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-link {
+        color: #f8d521;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .login-link:hover {
+        color: #e0bc1a;
+        text-decoration: none;
+    }
+
+    @media (max-width: 576px) {
+        .form-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="register" class="py-5">
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title text-center">Create an Account</h2>
+            {% if form.errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+                {% for field in form %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-control">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-dark">Register</button>
+            </form>
+            <p class="text-center mt-3">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="login-link">Log In</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}
