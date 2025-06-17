@@ -1,18 +1,22 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
         ('men', 'Men'),
         ('women', 'Women'),
-        ('accessories', 'Accessories'),
+        ('electronics', 'Electronics'),
+        ('computers', 'Computers'),
+        ('houses', 'Houses'),
+        ('automotives','Automotives')
     ]
     
     name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/')
+    image = CloudinaryField('image', folder='products', blank=True)  # Use CloudinaryField
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     
