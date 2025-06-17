@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}DASAUDA | {{ product.name }}{% endblock %}
+{% block body_class %}product-detail{% endblock %}
+
+{% block extra_head %}
+<style>
+    #product-detail {
+        transition: all 0.5s ease;
+    }
+
+    .product-image {
+        height: 500px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-common {
+        background-color: #f8d521;
+        color: #000;
+        font-weight: 600;
+        border-left: 3px solid #f8d521;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .btn-common:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-like {
+        background: #fff;
+        border-radius: 50%;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-like.liked {
+        background: #f8d521;
+    }
+
+    .btn-like:hover {
+        background: #f8d521;
+        transform: scale(1.1);
+    }
+
+    .comment-section {
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #eee;
+    }
+
+    .comment-item {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .comment-item:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-meta {
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .comment-meta .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f8d521;
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .comment-content {
+        padding-left: 50px;
+    }
+
+    .form-control {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .btn-dark {
+        border-left: 3px solid #f8d521;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        padding: 12px 25px;
+    }
+
+    .btn-dark:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-buttons {
+        margin-bottom: 30px;
+    }
+
+    .comment-form-container {
+        background: #f9f9f9;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .comment-form-title {
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .no-comments {
+        text-align: center;
+        padding: 30px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        color: #666;
+    }
+
+    .like-count {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .product-meta {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .product-category {
+        background: #f8d521;
+        color: #000;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .product-rating {
+        color: #ffc107;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="product-detail" class="py-5">
+    <div class="container">
+        <div class="nav-buttons">
+
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-dark px-4 py-3 rounded-0 me-2">
+                    <i class="fas fa-sign-out-alt me-2"></i>LOGOUT
+                </button>
+            </form>
+            <span class="text-muted">Welcome, {{ user.username }}!</span>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn-dark px-4 py-3 rounded-0 me-2">
+                <i class="fas fa-sign-in-alt me-2"></i>LOGIN
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-dark px-4 py-3 rounded-0">
+                <i class="fas fa-user-plus me-2"></i>REGISTER
+            </a>
+            {% endif %}
+        </div>
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-md-6">
+                <div class="image-holder">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image img-fluid">
+                </div>
+            </div>
+            <!-- Product Details -->
+            <div class="col-md-6">
+                <div class="product-meta">
+                    <span class="product-category">{{ product.get_category_display }}</span>
+                    <span class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </span>
+                </div>
+                <h1 class="text-uppercase mb-3">{{ product.name }}</h1>
+                <h3 class="mb-4" style="color: green;">TZS {{ product.price|floatformat:0|intcomma }}</h3>
+                <p class="mb-4 lead">{{ product.description }}</p>
+                <div class="d-flex align-items-center mb-4">
+                    <a href="{% url 'home' %}" class="btn btn-common me-3">
+                        <i class="fas fa-shopping-bag me-2"></i>Back to Shop
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'like_product' product.pk %}"
+                        class="btn btn-like {% if user_liked %}liked{% endif %}">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <use xlink:href="#heart"></use>
+                        </svg>
+                    </a>
+                    <span class="ms-2">{{ product.get_like_count }} Like{{ product.get_like_count|pluralize }}</span>
+                    {% else %}
+                   
+                    <a href="{% url 'login' %}"
+                        class="btn btn-like {% if user_liked %}liked{% endif %}">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <use xlink:href="#heart"></use>
+                        </svg>
+                    </a>
+                    <span class="ms-2">{{ product.get_like_count }} Like{{ product.get_like_count|pluralize }}</span> 
+                    
+                    
+                    {% endif %}
+                </div>
+                <div class="contact-phone">
+  <!-- Regular Phone Call -->
+  <a href="tel:+255123456789" class="phone-link" style="text-decoration: none; margin-right: 15px;">
+    <i class="fas fa-phone-alt" style="color: #2528d3; margin-right: 5px;"></i>
+    <span style="color: #333;">+255 769 293 599</span>
+  </a>
+  
+  <!-- WhatsApp -->
+  <a href="https://wa.me/255123456789" class="whatsapp-link" target="_blank" style="text-decoration: none;">
+    <i class="fab fa-whatsapp" style="color: #25D366; margin-right: 5px;"></i>
+    <span style="color: #333;">+255 713 187 680</span>
+  </a>
+</div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comment-section">
+            <h3 class="text-uppercase mb-4"><i class="far fa-comments me-2"></i>Customer Reviews</h3>
+
+            {% if user.is_authenticated %}
+            <div class="comment-form-container">
+                <h4 class="comment-form-title">Add your review</h4>
+                <form method="POST" action="{% url 'add_comment' product.pk %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" placeholder="Write your review here..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Review
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <a href="{% url 'login' %}" class="text-decoration-none fw-bold" style="color: #f8d521;">Sign in</a> to
+                leave a review.
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                {% if product.comments.all %}
+                {% for comment in product.comments.all %}
+                <div class="comment-item">
+                    <div class="comment-meta">
+                        <div class="user-avatar">
+                            {{ comment.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <strong>{{ comment.user.username }}</strong>
+                            <div class="text-muted small">{{ comment.created_at|timesince }} ago</div>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="no-comments">
+                    <i class="far fa-comment-dots fa-3x mb-3" style="color: #ddd;"></i>
+                    <h5>No reviews yet</h5>
+                    <p>Be the first to review this product</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

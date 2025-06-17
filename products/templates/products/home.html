@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}DASAUDA | SHOP{% endblock %}
+{% block body_class %}homepage{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<section id="billboard" class="position-relative overflow-hidden bg-dark">
+    <div class="position-absolute w-100 h-100" style="
+        background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+        z-index: 1;
+    "></div>
+    <div class="position-absolute w-100 h-100" style="
+        background-image: url('{% static 'images/backg.jpg' %}');
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    "></div>
+    <div class="container position-relative" style="z-index: 2; min-height: 80vh;">
+        <div class="row align-items-center h-100">
+            <div class="col-lg-7 py-5" data-aos="fade-up">
+                <h1 class="display-3 fw-bold mb-4 text-white">
+                    <span class="d-block mb-2"
+                        style="font-size: 1.2rem; letter-spacing: 4px; color: #f8d521;">KARIBU</span>
+                    <span class="d-block" style="text-transform: uppercase; letter-spacing: 2px;">Sauda Shop</span>
+                </h1>
+                <div class="mt-4 pt-2">
+                    <!-- <a href="{% url 'add_product' %}" class="btn btn-dark px-4 py-3 rounded-0 me-2" style="
+                        letter-spacing: 1px;
+                        font-weight: 500;
+                        border-left: 3px solid #f8d521;
+                    ">
+                        ADD PRODUCT
+                    </a> -->
+                    <a href="#bidhaa" class="btn btn-dark px-4 py-3 rounded-0" style="
+                        letter-spacing: 1px;
+                        font-weight: 500;
+                        border-left: 3px solid #f8d521;
+                    ">
+                        NUNUA BIDHAA
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="categories overflow-hidden" id="bidhaa">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+            <h4 class="text-uppercase">Bidhaa mpya</h4>
+            <a href="#zote" class="btn-link">Ona Bidhaa zote</a>
+        </div>
+        <div class="open-up" data-aos="zoom-out">
+            <div class="row">
+                {% for product in new_products %}
+                <div class="col-md-4">
+                    <div class="cat-item image-zoom-effect">
+                        <div class="image-holder">
+                            <a href="{% url 'product_detail' product.pk %}">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                    class="product-image img-fluid" style="height: 350px; width: 500px;">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <h5 class="element-title text-uppercase fs-5 mt-3">
+                                <a href="{% url 'product_detail' product.pk %}" class="text-dark">{{ product.name }}</a>
+                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none"
+                                    data-after="nunua sasa" style="color: #333; font-weight: bold;">
+                                    <span style="color: green;">TZS {{ product.price|floatformat:0|intcomma }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="products" class="new-arrival py-5 bg-light">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+            <h2 class="text-uppercase">Bidhaa zetu</h2>
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter by Category
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="?category=men">Men</a></li>
+                    <li><a class="dropdown-item" href="?category=women">Women</a></li>
+                    <li><a class="dropdown-item" href="?category=accessories">Accessories</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{% url 'home' %}">All Products</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row g-4" id="zote">
+            {% for product in all_products %}
+            <div class="col-md-4">
+                <div class="product-item image-zoom-effect link-effect h-100">
+                    <div class="image-holder position-relative">
+                        <a href="{% url 'product_detail' product.pk %}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                class="product-image img-fluid w-100" style="height: 430px; width: 500px;">
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'like_product' product.pk %}"
+                            class="btn-icon btn-wishlist {% if user_liked %}liked{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <use xlink:href="#heart"></use>
+                            </svg>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn-icon btn-wishlist">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <use xlink:href="#heart"></use>
+                            </svg>
+                        </a>
+                        {% endif %}
+                        <div class="product-content">
+                            <h5 class="element-title text-uppercase fs-5 mt-3">
+                                <a href="{% url 'product_detail' product.pk %}" class="text-dark">{{ product.name }}</a>
+                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none"
+                                    data-after="nunua sasa" style="color: #333; font-weight: bold;">
+                                    <span style="color: green;">TZS {{ product.price|floatformat:0|intcomma }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4>No products available</h4>
+                <a href="{% url 'add_product' %}" class="btn btn-primary">Add Product</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="video py-5 overflow-hidden">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="video-content open-up" data-aos="zoom-out">
+                <div class="video-bg">
+                    <img src="{% static 'images/video-image.jpg' %}" alt="video" class="video-image img-fluid">
+                </div>
+                <div class="video-player">
+                    <a class="youtube" href="https://www.youtube.com/embed/pjtsGzQjFM4">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <use xlink:href="#play"></use>
+                        </svg>
+                        <img src="{% static 'images/text-pattern.png' %}" alt="pattern" class="text-rotate">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter bg-light py-5" style="background: url('{% static 'images/pattern-bg.png' %}') no-repeat;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center py-5 my-2">
+                <h3 class="mb-4">Subscribe to Our Newsletter</h3>
+                <form class="d-flex">
+                    <input type="email" class="form-control me-2" placeholder="Your email address">
+                    <button type="submit" class="btn btn-dark">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="instagram position-relative">
+    <div class="d-flex justify-content-center w-100 position-absolute bottom-0 z-1 py-4">
+        <a href="#" class="btn btn-dark px-5">Follow us on Facebook</a>
+    </div>
+    <div class="row g-0">
+        {% for i in "123456" %}
+        <div class="col-6 col-sm-4 col-md-2">
+            <div class="insta-item">
+                <a href="#" target="_blank">
+                    <img src="{% static 'images/insta-item' %}{{ i }}.jpg" alt="instagram"
+                        class="insta-image img-fluid">
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
