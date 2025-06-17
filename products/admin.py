@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 from .models import Product, Like, Comment
 
 @admin.register(Product)
@@ -12,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     
     def image_preview(self, obj):
         if obj.image:
-            return f'<img src="{obj.image.url}" style="max-height: 100px;" />'
+            return '<img src="%s" style="max-height: 100px;" />' % obj.image.url
         return 'No image'
     image_preview.allow_tags = True
     image_preview.short_description = 'Image Preview'
@@ -44,3 +46,4 @@ class CommentAdmin(admin.ModelAdmin):
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
         return queryset, True
+
