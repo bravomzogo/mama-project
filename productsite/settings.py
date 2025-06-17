@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-6q(4+do*u#wti1)$-a#6d57fec$@gwrjqy^v5mn@z=7qc6tw$0')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['dasauda-shop.onrender.com', 'localhost', '127.0.0.1']  # Update with your Render domain
 
