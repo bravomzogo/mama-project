@@ -2,3 +2,39 @@
 db.sqlite3
 db.sqlite3-journal
 
+# Python cache files
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Django migrations cache
+*.py[cod]
+*.log
+
+# Media and static files (if not version-controlled)
+media/*
+!media/.gitkeep
+staticfiles/
+
+# Environment files
+.env
+*.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Virtual environment
+venv/
+env/
+lplp/
+
+# macOS system files
+.DS_Store
+
+# Other common ignores
+*.bak
+*.backup
